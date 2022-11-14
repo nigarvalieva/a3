@@ -1,6 +1,6 @@
 function gettime() {
     let now = new Date();
-    return `${now.getHours()}:${now.getMinutes()}`
+    return `${now.toLocaleTimeString().slice(0,-3)}`
 }
 let arr  = []
 
@@ -9,6 +9,13 @@ class Message {
         this.author = author
         this.text = text
         this.time = time
+    }
+    toHtml(){
+        arr.forEach((el) => {
+            let div = document.createElement('div')
+            div.innerHTML = el
+            document.querySelector('.history').append(div)
+        })
     }
 }
 class Messenger extends Message{
@@ -25,14 +32,21 @@ class Messenger extends Message{
 
     send(author, text){
         this.time = gettime() 
-        arr.push(this.time+' '+author+': '+text)
+        arr.push(this.time+'\t'+author+': '+text)
         console.log(author+': '+text)
     }
 }
-
+console.log(document.querySelector('.name').value)
 let m = new Message()
 let n = new Messenger()
-let n1 = new Messenger()
-n.send('Nika', 'txt-1')
-n1.send('Kiki', 'txt-2')
-n.show_history()
+
+document.querySelector('.btn-send').addEventListener('click', () => {
+    n.send(document.querySelector('.name').value, document.querySelector('.message').value)
+    document.querySelector('.name').value = ''
+    document.querySelector('.message').value = ''
+})
+
+document.querySelector('.btn-show').addEventListener('click', () => {
+    m.toHtml()
+    n.show_history()
+})
